@@ -15,6 +15,8 @@ import java.util.*;
 public class CachingBreedFetcher implements BreedFetcher {
     // TODO Task 2: Complete this class
     private int callsMade = 0;
+    DogApiBreedFetcher fetcher = new DogApiBreedFetcher();
+    Map<String, List<String>> cachedCall = new HashMap<>();
     public CachingBreedFetcher(BreedFetcher fetcher) {
 
     }
@@ -22,7 +24,14 @@ public class CachingBreedFetcher implements BreedFetcher {
     @Override
     public List<String> getSubBreeds(String breed) {
         // return statement included so that the starter code can compile and run.
-        return new ArrayList<>();
+        if (cachedCall.containsKey(breed)) {
+            return cachedCall.get(breed);
+
+        } else {
+            List<String> subbreeds = fetcher.getSubBreeds(breed);
+            cachedCall.put(breed, subbreeds);
+            return subbreeds;
+        }
     }
 
     public int getCallsMade() {
