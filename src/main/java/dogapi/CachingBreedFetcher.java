@@ -15,10 +15,10 @@ import java.util.*;
 public class CachingBreedFetcher implements BreedFetcher {
     // TODO Task 2: Complete this class
     private int callsMade = 0;
-    DogApiBreedFetcher fetcher = new DogApiBreedFetcher();
+    BreedFetcher underlyingFetcher;
     Map<String, List<String>> cachedCall = new HashMap<>();
     public CachingBreedFetcher(BreedFetcher fetcher) {
-
+        this.underlyingFetcher = fetcher;
     }
 
     @Override
@@ -28,7 +28,8 @@ public class CachingBreedFetcher implements BreedFetcher {
             return cachedCall.get(breed);
 
         } else {
-            List<String> subbreeds = fetcher.getSubBreeds(breed);
+            callsMade += 1;
+            List<String> subbreeds = underlyingFetcher.getSubBreeds(breed);
             cachedCall.put(breed, subbreeds);
             return subbreeds;
         }
